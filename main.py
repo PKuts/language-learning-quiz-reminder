@@ -19,4 +19,5 @@ DICTIONARY_NAME = config["excel_path"]
 POSITIVE_EMOJIS = config["positive_emojis"]
 NEGATIVE_EMOJIS = config["negative_emojis"]
 
-print ("SUPPER")
+
+print (POSITIVE_EMOJIS)
