@@ -1,0 +1,32 @@
+#  Application configuration
+
+#  Data source type: choose one of ["excel", "sqlite", "aws_s3"]
+data_source: excel
+
+#  Path to local Excel file (used if data_source == "excel")
+excel_path: data/dictionary.xlsx
+
+#  Path to SQLite database (used if data_source == "sqlite")
+sqlite_path: data/dictionary.db
+
+#  AWS S3 configuration (used if data_source == "aws_s3")
+aws_s3:
+  bucket_name: your-s3-bucket
+  object_key: dictionary.xlsx
+  region: eu-central-1
+
+# Behavior settings
+interval_seconds: 5             # Frequency for sending quiz questions
+delay: 0                        # Delay in feedback replies (in seconds)
+motivation_enabled: true        # Whether to send motivational stats
+motivation_timeout: 600         # Inactivity time (seconds) to trigger motivation
+
+# Emoji settings
+positive_emojis: ["😊", "🎉", "👍", "🌟", "😁"]
+negative_emojis: ["😞", "🙃", "😅", "😔", "👎"]
+
+# Logging configuration
+logging:
+  enabled: true
+  file: logs/project.log
+  level: INFO
