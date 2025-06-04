@@ -1,4 +1,5 @@
 from config.config_loader import load_config, load_secrets
+from data.loader import load_dictionary
 
 # Load configuration files
 config = load_config()
@@ -21,3 +22,6 @@ NEGATIVE_EMOJIS = config["negative_emojis"]
 
 
 print (POSITIVE_EMOJIS)
+
+df = load_dictionary(config)
+print(df.head())
