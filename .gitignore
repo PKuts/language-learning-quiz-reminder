@@ -28,6 +28,7 @@ config/secrets.json
 # DB (to avoid pushin .db)
 data/*.db
 *.sqlite3
+.xlsx
 
 # ⚙️ Virtual
 .venv/
