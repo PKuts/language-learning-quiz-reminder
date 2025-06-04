@@ -1,35 +1,70 @@
+import time
 from config.config_loader import load_config, load_secrets
 from data.loader import load_dictionary
+from telegram.handler import send_message, fetch_updates
 from utils.logger import setup_logging, log_message
+from quiz import get_random_task, validate_response, all_words_learned, send_congratulations
 
-# Load configuration files
+# Load configuration
 config = load_config()
 secrets = load_secrets()
 
-# Load sensitive data
-BOT_TOKEN = secrets["BOT_TOKEN"]
-USER_IDS = secrets["USER_IDS"]
-
-# Load general configuration
-INTERVAL_SECONDS = config["interval_seconds"]
-DELAY = config["delay"]
-MOTIVATION = config["motivation_enabled"]
-TIME_TO_MOTIVATE = config["motivation_timeout"]
-DICTIONARY_NAME = config["excel_path"]
-
-# Feedback emoji
-POSITIVE_EMOJIS = config["positive_emojis"]
-NEGATIVE_EMOJIS = config["negative_emojis"]
-
-# Setup logging
-logging_config = config.get("logging", {})
+# Logging
 setup_logging(
     enable=logging_config.get("enabled", False),
-    log_path=logging_config.get("file", "logs/project.log")
+    log_path=logging_config.get("file", "logs/project.log"),
+    level=logging_config.get("level", "INFO")
 )
 
+BOT_TOKEN = secrets["BOT_TOKEN"]
+USER_IDS = secrets["USER_IDS"]
+INTERVAL_SECONDS = config["interval_seconds"]
+TIME_TO_MOTIVATE = config["motivation_timeout"]
+MOTIVATION = config["motivation_enabled"]
 
-print (POSITIVE_EMOJIS)
-
+# Load dictionary
 df = load_dictionary(config)
-print(df.head())
+offset = None
+user_tasks = {user_id: None for user_id in USER_IDS}
+last_task_time = {user_id: 0 for user_id in USER_IDS}
+last_response_time = {user_id: time.time() for user_id in USER_IDS}
+
+print("Bot is running...")
+
+try:
+    while True:
+        now = time.time()
+
+        for user_id in USER_IDS:
+            if all_words_learned(df, user_id, USER_IDS):
+                send_congratulations(user_id)
+                print(f"{user_id} learned all words. Exiting.")
+                exit()
+
+            if user_tasks[user_id] is None and now - last_task_time[user_id] >= INTERVAL_SECONDS:
+                row_index, word = get_random_task(df, user_id, USER_IDS)
+                if word:
+                    user_tasks[user_id] = row_index
+                    send_message(user_id, word, bot_token=BOT_TOKEN)
+                    last_task_time[user_id] = now
+
+            if user_tasks[user_id] is not None and now - last_response_time[user_id] > TIME_TO_MOTIVATE and MOTIVATION:
+                send_message(user_id, "⚠️ You haven't replied in a while. Try to beat your score!", bot_token=BOT_TOKEN)
+                last_response_time[user_id] = now
+
+        updates = fetch_updates(offset=offset, bot_token=BOT_TOKEN)
+        for update in updates:
+            offset = update["update_id"] + 1
+            message = update.get("message", {})
+            user_id = str(message.get("from", {}).get("id", ""))
+            text = message.get("text", "")
+
+            if user_id in USER_IDS and user_tasks[user_id] is not None:
+                validate_response(df, user_tasks[user_id], user_id, USER_IDS, text, config, secrets)
+                user_tasks[user_id] = None
+                last_response_time[user_id] = time.time()
+
+        time.sleep(INTERVAL_SECONDS)
+
+except KeyboardInterrupt:
+    print("Bot stopped by user.")
