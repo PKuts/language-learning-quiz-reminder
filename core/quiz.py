@@ -1,6 +1,6 @@
 import random
 from data.loader import save_dictionary
-from telegram.handler import send_message
+from bot.handler import send_message
 from utils.logger import log_message
 
 def get_random_task(df, user_id, user_ids):

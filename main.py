@@ -1,15 +1,16 @@
 import time
 from config.config_loader import load_config, load_secrets
 from data.loader import load_dictionary
-from telegram.handler import send_message, fetch_updates
+from bot.handler import send_message, fetch_updates
 from utils.logger import setup_logging, log_message
-from quiz import get_random_task, validate_response, all_words_learned, send_congratulations
+from core.quiz import get_random_task, validate_response, all_words_learned, send_congratulations
 
 # Load configuration
 config = load_config()
 secrets = load_secrets()
 
 # Logging
+logging_config = config.get("logging", {})  
 setup_logging(
     enable=logging_config.get("enabled", False),
     log_path=logging_config.get("file", "logs/project.log"),
@@ -49,7 +50,7 @@ try:
                     last_task_time[user_id] = now
 
             if user_tasks[user_id] is not None and now - last_response_time[user_id] > TIME_TO_MOTIVATE and MOTIVATION:
-                send_message(user_id, "⚠️ You haven't replied in a while. Try to beat your score!", bot_token=BOT_TOKEN)
+                send_message(user_id, "You haven't replied in a while. Try to beat your score!", bot_token=BOT_TOKEN)
                 last_response_time[user_id] = now
 
         updates = fetch_updates(offset=offset, bot_token=BOT_TOKEN)
