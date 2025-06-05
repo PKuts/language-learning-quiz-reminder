@@ -3,7 +3,7 @@ from config.config_loader import load_config, load_secrets
 from data.loader import load_dictionary
 from bot.handler import send_message, fetch_updates
 from utils.logger import setup_logging, log_message
-from core.quiz import get_random_task, validate_response, all_words_learned, send_congratulations
+from core.quiz import get_random_task, validate_response, all_words_learned, send_congratulations, send_motivation
 
 # Load configuration
 config = load_config()
@@ -13,7 +13,7 @@ secrets = load_secrets()
 logging_config = config.get("logging", {})  
 setup_logging(
     enable=logging_config.get("enabled", False),
-    log_path=logging_config.get("file", "logs/project.log"),
+    log_path=logging_config.get("file", "logs/quiz.log"),
     level=logging_config.get("level", "INFO")
 )
 
@@ -39,7 +39,7 @@ try:
         for user_id in USER_IDS:
             if all_words_learned(df, user_id, USER_IDS):
                 send_congratulations(user_id)
-                print(f"{user_id} learned all words. Exiting.")
+                print(f"{user_id} learned all words. Let's congratulate the winner!!! Exiting...")
                 exit()
 
             if user_tasks[user_id] is None and now - last_task_time[user_id] >= INTERVAL_SECONDS:
@@ -50,7 +50,7 @@ try:
                     last_task_time[user_id] = now
 
             if user_tasks[user_id] is not None and now - last_response_time[user_id] > TIME_TO_MOTIVATE and MOTIVATION:
-                send_message(user_id, "You haven't replied in a while. Try to beat your score!", bot_token=BOT_TOKEN)
+                send_motivation(df, user_id, USER_IDS, config, secrets)
                 last_response_time[user_id] = now
 
         updates = fetch_updates(offset=offset, bot_token=BOT_TOKEN)

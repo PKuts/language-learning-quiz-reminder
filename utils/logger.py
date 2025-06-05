@@ -23,7 +23,7 @@ def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
 
     # Default log path
     if not log_path:
-        log_path = f"logs/project.{datetime.now().strftime('%Y-%m-%d')}.log"
+        log_path = f"logs/quiz.{datetime.now().strftime('%Y-%m-%d')}.log"
 
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
