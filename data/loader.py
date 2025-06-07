@@ -63,7 +63,7 @@ def save_dictionary(df, config):
         conn.close()
 
     elif source == "aws_s3":
-        import boto3
+        #import boto3
         import io
         buffer = io.BytesIO()
         df.to_excel(buffer, index=False)

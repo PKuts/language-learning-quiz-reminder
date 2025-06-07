@@ -33,6 +33,7 @@ def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
             filename=log_path,
             level=level_value,
             format="%(asctime)s - %(levelname)s - %(message)s"
+            encoding="utf-8"
         )
 
     logging.info("Logging started.")
