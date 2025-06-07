@@ -1,7 +1,7 @@
 #  Application configuration
 
 #  Data source type: choose one of ["excel", "sqlite", "aws_s3"]
-data_source: excel
+data_source: sqlite
 
 #  Path to local Excel file (used if data_source == "excel")
 excel_path: data/dictionary.xlsx

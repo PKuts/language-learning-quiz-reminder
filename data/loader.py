@@ -19,7 +19,18 @@ def load_dictionary(config):
     elif source == "sqlite":
         db_path = config["sqlite_path"]
         if not os.path.exists(db_path):
-            raise FileNotFoundError(f"SQLite database not found at: {db_path}")
+            print(f"SQLite database not found at: {db_path}")
+            print("Initializing default database...")
+
+            # Run init_sqlite.py dynamically
+            import subprocess
+            init_path = os.path.join(os.path.dirname(__file__), "init_sqlite.py")
+            subprocess.run(["python", init_path], check=True)
+            if not os.path.exists(db_path):
+                raise FileNotFoundError(f"Failed to create SQLite database at: {db_path}")
+
+        
+        
         conn = sqlite3.connect(db_path)
         df = pd.read_sql_query("SELECT * FROM dictionary", conn)
         conn.close()

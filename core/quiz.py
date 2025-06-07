@@ -41,7 +41,7 @@ def send_congratulations(user_id):
     send_message(user_id, "🎉 Congratulations! You’ve learned everything. Add new words to continue!")
     log_message("Achievement", user_id, "Learned all words.")
 
-def send_motivation(df, user_ids, secrets):
+def send_motivation(df, user_id, user_ids, config, secrets):
     """
     Send a motivational message to the user, including stats and competition.
     """

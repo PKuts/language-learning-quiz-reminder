@@ -19,7 +19,7 @@ db_path = config["sqlite_path"]
 # Define table structure
 columns = ["German", "Ukrainian", "Example", "Date", "User 1", "User 2"]
 
-# Extracted words manually processed from all 4 notebook images
+print(f"Create sqlite db with some words in {db_path}" )
 entries = [
     # From IMG_20250606_001111793_HDR
     ("der Haushalt", "господарство", "Ich mache den Haushalt.", "2025-06-06", 0, 0),
