@@ -22,8 +22,13 @@ def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
     level_value = getattr(logging, level.upper(), logging.INFO)
 
     # Default log path
-    if not log_path:
-        log_path = f"logs/quiz.{datetime.now().strftime('%Y-%m-%d')}.log"
+    if log_path:
+        base_name = os.path.splitext(os.path.basename(log_path))[0]
+    else:
+        base_name = "quiz"
+
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    log_path = os.path.join("logs", f"{base_name}_{timestamp}.log")
 
     os.makedirs(os.path.dirname(log_path), exist_ok=True)
 
@@ -32,7 +37,7 @@ def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
         logging.basicConfig(
             filename=log_path,
             level=level_value,
-            format="%(asctime)s - %(levelname)s - %(message)s"
+            format="%(asctime)s - %(levelname)s - %(message)s",
             encoding="utf-8"
         )
 

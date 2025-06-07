@@ -28,5 +28,5 @@ negative_emojis: ["😞", "🙃", "😅", "😔", "👎"]
 # Logging configuration
 logging:
   enabled: true
-  file: logs/quiz.log
+  file: quiz
   level: INFO
