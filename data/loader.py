@@ -1,8 +1,9 @@
-import pandas as pd
-import sqlite3
-import importlib
 import os
-#import boto3
+import sqlite3
+
+import pandas as pd
+
+# import boto3
 
 
 def load_dictionary(config):
@@ -24,13 +25,14 @@ def load_dictionary(config):
 
             # Run init_sqlite.py dynamically
             import subprocess
+
             init_path = os.path.join(os.path.dirname(__file__), "init_sqlite.py")
             subprocess.run(["python", init_path], check=True)
             if not os.path.exists(db_path):
-                raise FileNotFoundError(f"Failed to create SQLite database at: {db_path}")
+                raise FileNotFoundError(
+                    f"Failed to create SQLite database at: {db_path}"
+                )
 
-        
-        
         conn = sqlite3.connect(db_path)
         df = pd.read_sql_query("SELECT * FROM dictionary", conn)
         conn.close()
@@ -48,7 +50,7 @@ def load_dictionary(config):
 
     else:
         raise ValueError(f"Unsupported data source: {source}")
-    
+
 
 def save_dictionary(df, config):
     source = config["data_source"]
@@ -58,6 +60,7 @@ def save_dictionary(df, config):
 
     elif source == "sqlite":
         import sqlite3
+
         conn = sqlite3.connect(config["sqlite_path"])
         df.to_sql("dictionary", conn, if_exists="replace", index=False)
         conn.close()
@@ -69,8 +72,8 @@ def save_dictionary(df, config):
     #     df.to_excel(buffer, index=False)
     #     buffer.seek(0)
 
-        # s3 = boto3.client("s3", region_name=config["aws_s3"]["region"])
-        # s3.upload_fileobj(buffer, config["aws_s3"]["bucket_name"], config["aws_s3"]["object_key"])
+    # s3 = boto3.client("s3", region_name=config["aws_s3"]["region"])
+    # s3.upload_fileobj(buffer, config["aws_s3"]["bucket_name"], config["aws_s3"]["object_key"])
 
     else:
         raise ValueError(f"Unsupported data source: {source}")

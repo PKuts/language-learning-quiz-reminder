@@ -1,8 +1,9 @@
 import logging
-from datetime import datetime
 import os
+from datetime import datetime
 
 ENABLE_LOGGING = False  # Global flag
+
 
 def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
     """
@@ -38,10 +39,11 @@ def setup_logging(enable: bool, log_path: str = None, level: str = "INFO"):
             filename=log_path,
             level=level_value,
             format="%(asctime)s - %(levelname)s - %(message)s",
-            encoding="utf-8"
+            encoding="utf-8",
         )
 
     logging.info("Logging started.")
+
 
 def log_message(action, user_id, content):
     """

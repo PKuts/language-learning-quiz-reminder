@@ -1,8 +1,9 @@
 import random
-import time
-from data.loader import save_dictionary
+
 from bot.handler import send_message
+from data.loader import save_dictionary
 from utils.logger import log_message
+
 
 def get_random_task(df, user_id, user_ids):
     user_column = f"User {user_ids.index(user_id) + 1}"
@@ -11,6 +12,7 @@ def get_random_task(df, user_id, user_ids):
         random_row = filtered_df.sample(n=1).iloc[0]
         return random_row.name, random_row["Ukrainian"]
     return None, None
+
 
 def validate_response(df, row_index, user_id, user_ids, user_response, config, secrets):
     correct_translation = df.at[row_index, "German"]
@@ -29,17 +31,23 @@ def validate_response(df, row_index, user_id, user_ids, user_response, config, s
             user_id,
             f"That's not correct. {emoji} Correct is: {correct_translation}. Example: {example}",
             delay=config["delay"],
-            bot_token=secrets["BOT_TOKEN"]
+            bot_token=secrets["BOT_TOKEN"],
         )
         log_message("Feedback", user_id, f"Incorrect response: {user_response}")
+
 
 def all_words_learned(df, user_id, user_ids):
     user_column = f"User {user_ids.index(user_id) + 1}"
     return df[user_column].sum() == len(df)
 
+
 def send_congratulations(user_id):
-    send_message(user_id, "🎉 Congratulations! You’ve learned everything. Add new words to continue!")
+    send_message(
+        user_id,
+        "🎉 Congratulations! You’ve learned everything. Add new words to continue!",
+    )
     log_message("Achievement", user_id, "Learned all words.")
+
 
 def send_motivation(df, user_id, user_ids, config, secrets):
     """
@@ -51,9 +59,7 @@ def send_motivation(df, user_id, user_ids, config, secrets):
     percent = round(learned_words / total_words * 100)
 
     # Lets find Leader
-    leaderboard = {
-        uid: df[f"User {user_ids.index(uid) + 1}"].sum() for uid in user_ids
-    }
+    leaderboard = {uid: df[f"User {user_ids.index(uid) + 1}"].sum() for uid in user_ids}
     sorted_leaderboard = sorted(leaderboard.items(), key=lambda x: x[1], reverse=True)
 
     message = f"You’ve learned {learned_words} out of {total_words} words ({percent}%). Keep going!"
@@ -61,7 +67,9 @@ def send_motivation(df, user_id, user_ids, config, secrets):
     # If there're more than one player
     if len(sorted_leaderboard) > 1 and sorted_leaderboard[0][0] != user_id:
         leader_id, leader_score = sorted_leaderboard[0]
-        message += f"\n Your friend is leading with {leader_score} words. Try to catch up!"
+        message += (
+            f"\n Your friend is leading with {leader_score} words. Try to catch up!"
+        )
 
     send_message(user_id, message, bot_token=secrets["BOT_TOKEN"])
     log_message("Motivation", user_id, message)
