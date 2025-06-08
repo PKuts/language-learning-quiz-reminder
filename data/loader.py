@@ -62,12 +62,12 @@ def save_dictionary(df, config):
         df.to_sql("dictionary", conn, if_exists="replace", index=False)
         conn.close()
 
-    elif source == "aws_s3":
-        #import boto3
-        import io
-        buffer = io.BytesIO()
-        df.to_excel(buffer, index=False)
-        buffer.seek(0)
+    # elif source == "aws_s3":
+    #     #import boto3
+    #     import io
+    #     buffer = io.BytesIO()
+    #     df.to_excel(buffer, index=False)
+    #     buffer.seek(0)
 
         # s3 = boto3.client("s3", region_name=config["aws_s3"]["region"])
         # s3.upload_fileobj(buffer, config["aws_s3"]["bucket_name"], config["aws_s3"]["object_key"])
