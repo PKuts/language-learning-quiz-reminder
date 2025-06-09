@@ -1,12 +1,12 @@
 # Language Learning Quiz Reminder 🇩🇪🇺🇦🤖
 
-A Telegram-based AI assistant that helps users learn and retain German vocabulary through micro-quizzes. Designed for spaced repetition, this bot tracks user performance and motivates learning through friendly reminders and statistics.
+A Telegram-based assistant that helps users learn and retain German vocabulary through micro-quizzes (you can use any pair of two languages). Designed for spaced repetition, this bot tracks user performance and motivates learning through friendly reminders and statistics.
 
 ---
 
 ## ✨ Features
 
-- 🧠 **Micro Quiz Engine**: Sends random untranslated Ukrainian words and validates user translations.
+- 🧠 **Micro Quiz Engine**: Randomly selects a word from the configured dictionary (Ukrainian/German by default) and verifies the user's translation.
 - 👥 **Multi-user support**: Tracks individual learning progress for each user.
 - 💾 **Data storage**: Supports Excel and SQLite backends.
 - 💬 **Telegram Bot**: Simple interaction via Telegram messages.

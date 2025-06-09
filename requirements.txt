@@ -1,2 +1,5 @@
-pip install pandas
-pip install openpyxl      
+pandas
+openpyxl
+requests
+pyyaml
+pytest 
